@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -51,9 +53,15 @@ class ChineseChessBoard extends View {
     private String[] winText = {"紅方勝利","黑方勝利"};
     private String stringRiver = "楚河";
     private String stringSide = "漢界";
+    private Context context;
+    private SoundPool sound = new SoundPool(1, AudioManager.STREAM_MUSIC, 5);
+    int click;
+    int play;
+
 
     public ChineseChessBoard(Context context , AttributeSet attributeSet) {
         super(context , attributeSet);
+        this.context = context;
         for (int i = 0 ; i < paintChess.length ; i++) {
             paintChess[i] = new Paint();
             paintText[i] = new Paint();
@@ -62,6 +70,8 @@ class ChineseChessBoard extends View {
     }
 
     private void init(){
+        click = sound.load(context, R.raw.click, 1);
+        play = sound.load(context, R.raw.short_punch1,1);
         for (int i = 0 ; i < pieces.length ; i++)
             pieces[i] = new Piece();
         for (int i = 0 ; i < pieces.length ; i++) {
@@ -180,6 +190,7 @@ class ChineseChessBoard extends View {
                                 }
                             }
                             whereICanMove();
+                            sound.play(click,(float) 1, (float) 1, 0, 0, 1);
                             invalidate();
                             return super.onTouchEvent(event);
                         }
@@ -198,6 +209,7 @@ class ChineseChessBoard extends View {
                                 isChoosing = false;
                                 nowCamp = 1 - nowCamp;
                                 canMove.clear();
+                                sound.play(play,1,1,0,0,1);
                                 break;
                             }
                         }
@@ -215,6 +227,7 @@ class ChineseChessBoard extends View {
                                     break;
                                 }
                             }
+                            sound.play(click,(float) 0.8, (float) 0.8, 0, 0, 1);
                             whereICanMove();
                         }
                     }
@@ -440,7 +453,6 @@ class ChineseChessBoard extends View {
     }
 
     private boolean isKingFaceKing(int x , int y){
-        Log.d("Seamas","chooseX = " + choose.x);
         pieces[chess].setSite(x,y);
         int k = isNull[x][y];
         isNull[x][y] = nowCamp;
