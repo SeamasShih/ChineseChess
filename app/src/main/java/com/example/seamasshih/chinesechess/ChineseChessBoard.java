@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
-import android.icu.text.LocaleDisplayNames;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +26,8 @@ class ChineseChessBoard extends View {
     private Paint paintCanMove = new Paint();
     private Path pathChess = new Path();
     private Path pathBoard = new Path();
+    private Path pathBoardDecorOne = new Path();
+    private Path pathBoardDecorTwo = new Path();
     private Resources resources = this.getResources();
     private DisplayMetrics dm = resources.getDisplayMetrics();
     private int screenWidth = dm.widthPixels;
@@ -48,6 +49,8 @@ class ChineseChessBoard extends View {
     private ArrayList<Point> canMove = new ArrayList<Point>();
     private int winner = -1;
     private String[] winText = {"紅方勝利","黑方勝利"};
+    private String stringRiver = "楚河";
+    private String stringSide = "漢界";
 
     public ChineseChessBoard(Context context , AttributeSet attributeSet) {
         super(context , attributeSet);
@@ -116,6 +119,21 @@ class ChineseChessBoard extends View {
         pathBoard.lineTo(widthFE*5,heightFE*7);
         pathBoard.moveTo(widthFE*5,heightFE*9);
         pathBoard.lineTo(widthFE*3,heightFE*7);
+
+        float s = 0.1f;
+        float l = 0.2f;
+        pathBoardDecorOne.moveTo(s*widthFE,l*heightFE);
+        pathBoardDecorOne.lineTo(s*widthFE,s*heightFE);
+        pathBoardDecorOne.lineTo(l*widthFE,s*heightFE);
+        pathBoardDecorOne.moveTo(s*widthFE,-l*heightFE);
+        pathBoardDecorOne.lineTo(s*widthFE,-s*heightFE);
+        pathBoardDecorOne.lineTo(l*widthFE,-s*heightFE);
+        pathBoardDecorTwo.moveTo(-s*widthFE,l*heightFE);
+        pathBoardDecorTwo.lineTo(-s*widthFE,s*heightFE);
+        pathBoardDecorTwo.lineTo(-l*widthFE,s*heightFE);
+        pathBoardDecorTwo.moveTo(-s*widthFE,-l*heightFE);
+        pathBoardDecorTwo.lineTo(-s*widthFE,-s*heightFE);
+        pathBoardDecorTwo.lineTo(-l*widthFE,-s*heightFE);
 
         pathChess.addCircle(0,0,radiusChess, Path.Direction.CCW);
 
@@ -218,6 +236,61 @@ class ChineseChessBoard extends View {
         canvas.translate(edgeW,edgeH);
         canvas.drawPath(pathBoard,paintBoard);
         canvas.drawPath(pathBoard,paintChess[nowCamp]);
+
+        canvas.save();
+        canvas.translate(0,heightFE*3);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.translate(widthFE,-heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE*2,0);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE*2,0);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,-heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,heightFE);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate(0,heightFE*6);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.translate(widthFE,heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,-heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE*2,0);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE*2,0);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,heightFE);
+        canvas.drawPath(pathBoardDecorOne,paintChess[nowCamp]);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.translate(widthFE,-heightFE);
+        canvas.drawPath(pathBoardDecorTwo,paintChess[nowCamp]);
+        canvas.restore();
+
+        canvas.save();
+        canvas.translate(2*widthFE,4.5f*heightFE);
+        canvas.drawText(stringRiver,0,adjustTextY,paintText[nowCamp]);
+        canvas.restore();
+        canvas.save();
+        canvas.translate(6*widthFE,4.5f*heightFE);
+        canvas.rotate(180);
+        canvas.drawText(stringSide,0,adjustTextY,paintText[nowCamp]);
+        canvas.restore();
+
         for (int i = 0 ; i < pieces.length ; i++){
             if (pieces[i] == null) continue;
             canvas.save();
