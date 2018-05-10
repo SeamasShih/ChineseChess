@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         background = MediaPlayer.create(this,R.raw.background);
-        background.setVolume((float)0.03,(float)0.03);
+        background.setVolume(0.2f,0.2f);
         background.setLooping(true);
     }
 

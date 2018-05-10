@@ -1,13 +1,17 @@
 package com.example.seamasshih.chinesechess;
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Shader;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.AttributeSet;
@@ -15,6 +19,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import java.util.ArrayList;
 
@@ -57,6 +62,8 @@ class ChineseChessBoard extends View {
     private SoundPool sound = new SoundPool(1, AudioManager.STREAM_MUSIC, 5);
     int click;
     int play;
+    Path pathRiver = new Path();
+    Paint paintRiver = new Paint();
 
 
     public ChineseChessBoard(Context context , AttributeSet attributeSet) {
@@ -109,6 +116,21 @@ class ChineseChessBoard extends View {
         paintText[1].setTextAlign(Paint.Align.CENTER);
         Paint.FontMetrics fontMetrix = paintText[0].getFontMetrics();
         adjustTextY = (fontMetrix.bottom - fontMetrix.top)/2 - fontMetrix.bottom;
+
+//        pathRiver.addRect(0,heightFE*4,widthFE*8,heightFE*5, Path.Direction.CCW);
+//        paintRiver.setColor(Color.rgb(120, 180, 255));
+//        ValueAnimator animator = ValueAnimator.ofFloat(0,screenWidth).setDuration(4000);
+//        animator.setRepeatCount(-1);
+//        animator.setInterpolator(new LinearInterpolator());
+//        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                paintRiver.setShader(new LinearGradient((float)animation.getAnimatedValue(),screenHeight/2,(float)animation.getAnimatedValue()+screenWidth/2,screenHeight/2,Color.rgb(120, 180, 255),Color.rgb(200, 230, 255), Shader.TileMode.MIRROR));
+//                invalidate();
+//            }
+//        });
+//        animator.start();
+
 
         pathBoard.addRect(0,0,widthFE*8,heightFE*9, Path.Direction.CCW);
         for (int i = 1 ; i < 8 ; i++) {
@@ -249,6 +271,7 @@ class ChineseChessBoard extends View {
         canvas.translate(edgeW,edgeH);
         canvas.drawPath(pathBoard,paintBoard);
         canvas.drawPath(pathBoard,paintChess[nowCamp]);
+        canvas.drawPath(pathRiver,paintRiver);
 
         canvas.save();
         canvas.translate(0,heightFE*3);
@@ -296,12 +319,12 @@ class ChineseChessBoard extends View {
 
         canvas.save();
         canvas.translate(2*widthFE,4.5f*heightFE);
-        canvas.drawText(stringRiver,0,adjustTextY,paintText[nowCamp]);
+        canvas.drawText(stringRiver,0,adjustTextY,paintText[nowCamp]);  //楚河
         canvas.restore();
         canvas.save();
         canvas.translate(6*widthFE,4.5f*heightFE);
         canvas.rotate(180);
-        canvas.drawText(stringSide,0,adjustTextY,paintText[nowCamp]);
+        canvas.drawText(stringSide,0,adjustTextY,paintText[nowCamp]);  //漢界
         canvas.restore();
 
         for (int i = 0 ; i < pieces.length ; i++){
