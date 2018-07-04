@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -64,6 +65,7 @@ class ChineseChessBoard extends View {
     int play;
     Path pathRiver = new Path();
     Paint paintRiver = new Paint();
+    int backgroundColor;
 
 
     public ChineseChessBoard(Context context , AttributeSet attributeSet) {
@@ -73,7 +75,27 @@ class ChineseChessBoard extends View {
             paintChess[i] = new Paint();
             paintText[i] = new Paint();
         }
+
+        TypedArray typedArray = context.obtainStyledAttributes(attributeSet, R.styleable.ChineseChessBoard);
+
         init();
+
+        int boardColor = typedArray.getColor(R.styleable.ChineseChessBoard_board_color,Color.rgb(0xAA,0xAA,0x64));
+        backgroundColor = typedArray.getColor(R.styleable.ChineseChessBoard_background_color,Color.rgb(0x55,0x55,0x55));
+        int chessAlternativeColor = typedArray.getColor(R.styleable.ChineseChessBoard_chess_alternative_color,Color.YELLOW);
+        int chessDefensiveColor = typedArray.getColor(R.styleable.ChineseChessBoard_chess_defensive_color,Color.BLACK);
+        int chessOffensiveColor = typedArray.getColor(R.styleable.ChineseChessBoard_chess_offensive_color,Color.RED);
+        int chessSelectColor = typedArray.getColor(R.styleable.ChineseChessBoard_chess_select_color,Color.GREEN);
+        int chessContentColor = typedArray.getColor(R.styleable.ChineseChessBoard_chess_content_color,Color.rgb(200,200,200));
+
+        paintBoard.setColor(boardColor);
+        paintSelect.setColor(chessSelectColor);
+        paintCanMove.setColor(chessAlternativeColor);
+        paintChess[0].setColor(chessOffensiveColor);
+        paintText[0].setColor(chessOffensiveColor);
+        paintChess[1].setColor(chessDefensiveColor);
+        paintText[1].setColor(chessDefensiveColor);
+        paintWhite.setColor(chessContentColor);
     }
 
     private void init(){
@@ -89,29 +111,21 @@ class ChineseChessBoard extends View {
                 pieces[i].setIndex((i%16+1)/2);
         }
         setChessSite();
-        paintBoard.setColor(Color.rgb(0xAA,0xAA,100));
         paintBoard.setStyle(Paint.Style.FILL);
-        paintSelect.setColor(Color.GREEN);
         paintSelect.setStyle(Paint.Style.STROKE);
         paintSelect.setStrokeWidth(5);
-        paintCanMove.setColor(Color.YELLOW);
         paintCanMove.setStyle(Paint.Style.STROKE);
         paintCanMove.setStrokeWidth(5);
-        paintWhite.setColor(Color.rgb(200,200,200));
         paintWhite.setAntiAlias(true);
         paintWhite.setStyle(Paint.Style.FILL);
-        paintChess[0].setColor(Color.RED);
         paintChess[0].setStyle(Paint.Style.STROKE);
         paintChess[0].setAntiAlias(true);
         paintChess[0].setStrokeWidth(3);
-        paintText[0].setColor(Color.RED);
         paintText[0].setTextSize(60);
         paintText[0].setTextAlign(Paint.Align.CENTER);
-        paintChess[1].setColor(Color.BLACK);
         paintChess[1].setStyle(Paint.Style.STROKE);
         paintChess[1].setAntiAlias(true);
         paintChess[1].setStrokeWidth(3);
-        paintText[1].setColor(Color.BLACK);
         paintText[1].setTextSize(60);
         paintText[1].setTextAlign(Paint.Align.CENTER);
         Paint.FontMetrics fontMetrix = paintText[0].getFontMetrics();
@@ -268,6 +282,7 @@ class ChineseChessBoard extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawColor(backgroundColor);
         canvas.translate(edgeW,edgeH);
         canvas.drawPath(pathBoard,paintBoard);
         canvas.drawPath(pathBoard,paintChess[nowCamp]);
